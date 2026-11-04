@@ -22,6 +22,7 @@ Jobs:
 • build: ${BUILD_RESULT}
 • lint: ${LINT_RESULT}
 • test: ${TEST_RESULT}
+• security: ${SECURITY_RESULT}
 
 View run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 

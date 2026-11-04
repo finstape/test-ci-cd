@@ -91,9 +91,43 @@ jobs:
             .pytest_cache/
           retention-days: 7
 
+  security:
+    name: Security scan
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install security tools
+        run: |
+          pip install bandit pip-audit
+
+      - name: Run Bandit (Python SAST)
+        run: bandit -r src/ -f txt -o bandit-report.txt || true
+
+      - name: Run pip-audit (dependencies)
+        run: pip-audit || true
+
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            bandit-report.txt
+          retention-days: 7
+
   notify:
     name: Notify status
-    needs: [build, lint, test]
+    needs: [build, lint, test, security]
     if: always()
     runs-on: ubuntu-latest
 
@@ -114,6 +148,7 @@ jobs:
           BUILD_RESULT: ${{ needs.build.result }}
           LINT_RESULT: ${{ needs.lint.result }}
           TEST_RESULT: ${{ needs.test.result }}
+          SECURITY_RESULT: ${{ needs.security.result }}
         run: |
           chmod +x .github/scripts/notify-telegram.sh
           .github/scripts/notify-telegram.sh "${{ job.status }}"
