@@ -131,4 +131,3 @@ jobs:
             Best regards,
             GitHub Actions
           convert_markdown: true
-          content_type: text/html
