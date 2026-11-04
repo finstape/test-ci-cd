@@ -108,22 +108,21 @@ jobs:
           else
             EMOJI="⚠️"
           fi
+          TEXT="${EMOJI} CI Pipeline: ${STATUS}
 
-          TEXT="$EMOJI CI Pipeline: $STATUS
+  Project: test-ci-cd
+  Repository: ${{ github.repository }}
+  Commit: ${{ github.sha }}
+  Branch: ${{ github.ref_name }}
+  Triggered by: ${{ github.actor }}
+  Workflow run: ${{ github.run_id }}
 
-Project: test-ci-cd
-Repository: ${{ github.repository }}
-Commit: ${{ github.sha }}
-Branch: ${{ github.ref_name }}
-Triggered by: ${{ github.actor }}
-Workflow run: ${{ github.run_id }}
+  Jobs:
+  • build: ${{ needs.build.result }}
+  • lint: ${{ needs.lint.result }}
+  • test: ${{ needs.test.result }}
 
-Jobs:
-• build: ${{ needs.build.result }}
-• lint: ${{ needs.lint.result }}
-• test: ${{ needs.test.result }}
-
-View run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+  View run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
