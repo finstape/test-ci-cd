@@ -1,13 +1,13 @@
-"""Основной модуль приложения."""
+"""Main application module."""
 
 
 def greet(name: str) -> str:
-    """Вернуть приветствие для указанного имени."""
+    """Return greeting for the specified name."""
     return f"Hello, {name}!"
 
 
 def main() -> None:
-    """Точка входа в приложение."""
+    """Application entry point."""
     print(greet("World"))
 
 

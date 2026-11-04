@@ -1,11 +1,8 @@
 [project]
 name = "test-ci-cd"
 version = "0.1.0"
-description = "Простой репозиторий на Python с CI/CD через GitHub Actions"
+description = "Simple Python repository with CI/CD via GitHub Actions"
 requires-python = ">=3.9"
-authors = [
-    { name = "Author", email = "author@example.com" }
-]
 license = { text = "MIT" }
 dependencies = []
 

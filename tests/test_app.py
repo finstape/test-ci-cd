@@ -1,13 +1,13 @@
-"""Тесты для модуля app."""
+"""Tests for the app module."""
 
 from src.myapp.app import greet
 
 
 def test_greet() -> None:
-    """Проверка функции greet с обычным именем."""
+    """Test greet function with a normal name."""
     assert greet("World") == "Hello, World!"
 
 
 def test_greet_empty_name() -> None:
-    """Проверка функции greet с пустым именем."""
+    """Test greet function with an empty name."""
     assert greet("") == "Hello, !"
