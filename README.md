@@ -18,16 +18,18 @@ test-ci-cd/
 │   ├── __init__.py
 │   └── test_app.py
 └── .github/
-    └── workflows/
-        ├── ci.yml
-        └── release.yml
+    ├── workflows/
+    │   ├── ci.yml
+    │   └── release.yml
+    └── scripts/
+        └── notify-telegram.sh
 ```
 
 ## Установка
 
 ```bash
 # Клонирование репозитория
-git clone https://github.com/<your-username>/test-ci-cd.git
+git clone https://github.com/finstape/test-ci-cd.git
 cd test-ci-cd
 
 # Создание и активация виртуального окружения
@@ -73,7 +75,8 @@ ruff format --check src/ tests/
 1. **build** — сборка пакета.
 2. **lint** — проверка кода через `ruff`.
 3. **test** — прогон тестов через `pytest`.
-4. **notify** — уведомление на email о статусе пайплайна (успех / ошибка).
+4. **security** — сканирование безопасности (`bandit` + `pip-audit`).
+5. **notify** — уведомление в Telegram о статусе пайплайна.
 
 При пуше тега вида `v*` автоматически создаётся релиз на GitHub с changelog и прикреплённым артефактом сборки.
 
