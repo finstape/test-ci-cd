@@ -36,4 +36,4 @@ jobs:
             --set image.tag=latest
 
       - name: Verify deployment
-        run: kubectl rollout status deployment/test-ci-cd --timeout=60s
+        run: kubectl rollout status deployment/test-ci-cd-test-ci-cd --timeout=60s
