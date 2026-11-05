@@ -17,6 +17,8 @@ test-ci-cd/
 ├── tests/
 │   ├── __init__.py
 │   └── test_app.py
+├── public/
+│   └── index.html
 ├── src/migrations/
 │   ├── env.py
 │   ├── script.py.mako
@@ -25,7 +27,8 @@ test-ci-cd/
 └── .github/
     ├── workflows/
     │   ├── ci.yml
-    │   └── release.yml
+    │   ├── release.yml
+    │   └── pages.yml
     └── scripts/
         └── notify-telegram.sh
 ```
@@ -101,6 +104,12 @@ ruff format --check src/ tests/
 6. **notify** — уведомление в Telegram о статусе пайплайна.
 
 При пуше тега вида `v*` автоматически создаётся релиз на GitHub с changelog и прикреплённым артефактом сборки.
+
+## GitHub Pages
+
+Статический сайт проекта разворачивается на GitHub Pages при каждом пуше в ветку `main` через отдельный пайплайн `.github/workflows/pages.yml`.
+
+Доступ по адресу: `https://finstape.github.io/test-ci-cd/`
 
 ## Лицензия
 
