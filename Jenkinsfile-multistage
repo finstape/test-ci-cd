@@ -16,7 +16,8 @@ pipeline {
         stage('Lint') {
             steps {
                 script {
-                    if (sh script: 'command -v pip', returnStatus: true) == 0 {
+                    def hasPip = sh script: 'command -v pip', returnStatus: true
+                    if (hasPip == 0) {
                         sh 'pip install ruff'
                         sh 'ruff check src/ tests/'
                         sh 'ruff format --check src/ tests/'
@@ -30,7 +31,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    if (sh script: 'command -v pip', returnStatus: true) == 0 {
+                    def hasPip = sh script: 'command -v pip', returnStatus: true
+                    if (hasPip == 0) {
                         sh 'pip install pytest'
                         sh 'pytest -v'
                     } else {
@@ -43,7 +45,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    if (sh script: 'command -v docker', returnStatus: true) == 0 {
+                    def hasDocker = sh script: 'command -v docker', returnStatus: true
+                    if (hasDocker == 0) {
                         sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -t ${DOCKER_IMAGE}:latest ."
                     } else {
                         echo "Docker CLI not found — simulating docker build"

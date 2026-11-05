@@ -17,7 +17,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    if (sh script: 'command -v docker', returnStatus: true) == 0 {
+                    def hasDocker = sh script: 'command -v docker', returnStatus: true
+                    if (hasDocker == 0) {
                         sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -t ${DOCKER_IMAGE}:latest ."
                     } else {
                         echo "Docker CLI not found — simulating build: docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG}"
@@ -29,7 +30,8 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    if (sh script: 'command -v docker', returnStatus: true) == 0 {
+                    def hasDocker = sh script: 'command -v docker', returnStatus: true
+                    if (hasDocker == 0) {
                         dockerLogin = dockerLogin(
                             registry: 'https://index.docker.io/v1/',
                             credentialsId: DOCKERHUB_CREDENTIALS
