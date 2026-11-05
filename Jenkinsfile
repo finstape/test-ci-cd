@@ -17,12 +17,9 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def hasDocker = sh script: 'command -v docker', returnStatus: true
-                    if (hasDocker == 0) {
-                        sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -t ${DOCKER_IMAGE}:latest ."
-                    } else {
-                        echo "Docker CLI not found — simulating build: docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    }
+                    def img = docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                    img.build("-f Dockerfile .")
+                    docker.tag(img.id, "${DOCKER_IMAGE}:latest")
                 }
             }
         }
@@ -30,16 +27,10 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    def hasDocker = sh script: 'command -v docker', returnStatus: true
-                    if (hasDocker == 0) {
-                        dockerLogin = dockerLogin(
-                            registry: 'https://index.docker.io/v1/',
-                            credentialsId: DOCKERHUB_CREDENTIALS
-                        )
-                        sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                        sh "docker push ${DOCKER_IMAGE}:latest"
-                    } else {
-                        echo "Docker CLI not found — simulating push to Docker Hub"
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
+                        def img = docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                        img.push()
+                        img.push('latest')
                     }
                 }
             }
