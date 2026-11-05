@@ -17,6 +17,11 @@ test-ci-cd/
 ├── tests/
 │   ├── __init__.py
 │   └── test_app.py
+├── src/migrations/
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions/
+│       └── 0001_initial.py
 └── .github/
     ├── workflows/
     │   ├── ci.yml
@@ -61,6 +66,22 @@ print(greet("World"))
 pytest
 ```
 
+## Миграции базы данных
+
+Проект использует **Alembic** для управления миграциями базы данных SQLite.
+
+Запуск миграций:
+```bash
+# Установка зависимостей
+pip install alembic sqlalchemy
+
+# Применение миграций
+PYTHONPATH=src alembic upgrade head
+
+# Создание новой миграции
+PYTHONPATH=src alembic revision --autogenerate -m "description"
+```
+
 ## Линтер
 
 ```bash
@@ -76,7 +97,8 @@ ruff format --check src/ tests/
 2. **lint** — проверка кода через `ruff`.
 3. **test** — прогон тестов через `pytest`.
 4. **security** — сканирование безопасности (`bandit` + `pip-audit`).
-5. **notify** — уведомление в Telegram о статусе пайплайна.
+5. **db-migrate** — применение миграций базы данных через `alembic upgrade head`.
+6. **notify** — уведомление в Telegram о статусе пайплайна.
 
 При пуше тега вида `v*` автоматически создаётся релиз на GitHub с changelog и прикреплённым артефактом сборки.
 
