@@ -125,9 +125,32 @@ jobs:
             bandit-report.txt
           retention-days: 7
 
+  db-migrate:
+    name: Database migrations
+    needs: [security]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install alembic sqlalchemy
+
+      - name: Run Alembic migrations
+        run: alembic upgrade head
+
   notify:
     name: Notify status
-    needs: [build, lint, test, security]
+    needs: [build, lint, test, security, db-migrate]
     if: always()
     runs-on: ubuntu-latest
 
@@ -149,6 +172,7 @@ jobs:
           LINT_RESULT: ${{ needs.lint.result }}
           TEST_RESULT: ${{ needs.test.result }}
           SECURITY_RESULT: ${{ needs.security.result }}
+          DB_MIGRATE_RESULT: ${{ needs.db-migrate.result }}
         run: |
           chmod +x .github/scripts/notify-telegram.sh
           .github/scripts/notify-telegram.sh "${{ job.status }}"

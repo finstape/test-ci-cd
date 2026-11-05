@@ -23,6 +23,7 @@ Jobs:
 • lint: ${LINT_RESULT}
 • test: ${TEST_RESULT}
 • security: ${SECURITY_RESULT}
+• db-migrate: ${DB_MIGRATE_RESULT}
 
 View run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
