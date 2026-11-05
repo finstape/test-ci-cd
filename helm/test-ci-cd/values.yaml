@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: test-ci-cd
+  tag: latest
+  pullPolicy: Never
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000

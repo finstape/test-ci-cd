@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-ci-cd
+  labels:
+    app: test-ci-cd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-ci-cd
+  template:
+    metadata:
+      labels:
+        app: test-ci-cd
+    spec:
+      containers:
+        - name: test-ci-cd
+          image: test-ci-cd:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000

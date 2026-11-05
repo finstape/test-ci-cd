@@ -1,0 +1,39 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Build & Deploy to Kubernetes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.12.0
+
+      - name: Set up kind cluster
+        uses: engineerd/setup-kind@v0.5.0
+        with:
+          version: "v0.20.0"
+
+      - name: Build Docker image
+        run: docker build -t test-ci-cd:latest .
+
+      - name: Load image into kind
+        run: kind load docker-image test-ci-cd:latest
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install test-ci-cd ./helm/test-ci-cd \
+            --namespace default --create-namespace \
+            --set image.tag=latest
+
+      - name: Verify deployment
+        run: kubectl rollout status deployment/test-ci-cd --timeout=60s

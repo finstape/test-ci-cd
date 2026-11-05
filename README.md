@@ -17,13 +17,33 @@ test-ci-cd/
 ├── tests/
 │   ├── __init__.py
 │   └── test_app.py
+├── Dockerfile
 ├── public/
 │   └── index.html
-├── src/migrations/
-│   ├── env.py
-│   ├── script.py.mako
-│   └── versions/
-│       └── 0001_initial.py
+├── src/
+│   ├── myapp/
+│   │   ├── __init__.py
+│   │   ├── app.py
+│   │   └── models.py
+│   └── migrations/
+│       ├── env.py
+│       ├── script.py.mako
+│       └── versions/
+│           └── 0001_initial.py
+├── k8s/
+│   ├── deployment.yaml
+│   └── service.yaml
+├── helm/
+│   └── test-ci-cd/
+│       ├── Chart.yaml
+│       ├── values.yaml
+│       └── templates/
+│           ├── _helpers.tpl
+│           ├── deployment.yaml
+│           └── service.yaml
+├── tests/
+│   ├── __init__.py
+│   └── test_app.py
 └── .github/
     ├── workflows/
     │   ├── ci.yml
@@ -110,6 +130,31 @@ ruff format --check src/ tests/
 Статический сайт проекта разворачивается на GitHub Pages при каждом пуше в ветку `main` через отдельный пайплайн `.github/workflows/pages.yml`.
 
 Доступ по адресу: `https://finstape.github.io/test-ci-cd/`
+
+## Kubernetes
+
+Проект можно развернуть в кластер Kubernetes через Helm.
+
+### Локально (kind)
+
+```bash
+# Сборка образа
+docker build -t test-ci-cd:latest .
+
+# Развертывание через Helm
+helm upgrade --install test-ci-cd ./helm/test-ci-cd --namespace default --create-namespace
+
+# Проверка статуса
+kubectl rollout status deployment/test-ci-cd
+```
+
+### В CI/CD (GitHub Actions)
+
+Workflow `.github/workflows/k8s-deploy.yml` при каждом пуше в `main`:
+1. Собирает Docker-образ.
+2. Поднимает локальный кластер kind.
+3. Загружает образ в кластер.
+4. Развертывает приложение через Helm.
 
 ## Лицензия
 
