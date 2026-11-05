@@ -1,0 +1,40 @@
+name: Multistage CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Stage: Lint
+        run: |
+          pip install ruff
+          ruff check src/ tests/
+          ruff format --check src/ tests/
+
+      - name: Stage: Test
+        run: |
+          pip install pytest
+          pytest -v
+
+      - name: Stage: Build Docker
+        run: |
+          docker build -t test-ci-cd:latest .
+
+      - name: Stage: Deploy
+        run: |
+          echo "Deploy step completed (simulated)"

@@ -18,6 +18,8 @@ test-ci-cd/
 │   ├── __init__.py
 │   └── test_app.py
 ├── Dockerfile
+├── Jenkinsfile
+├── Jenkinsfile-multistage
 ├── public/
 │   └── index.html
 ├── src/
@@ -48,7 +50,10 @@ test-ci-cd/
     ├── workflows/
     │   ├── ci.yml
     │   ├── release.yml
-    │   └── pages.yml
+    │   ├── pages.yml
+    │   ├── k8s-deploy.yml
+    │   ├── docker-publish.yml
+    │   └── multistage-pipeline.yml
     └── scripts/
         └── notify-telegram.sh
 ```
@@ -155,6 +160,18 @@ Workflow `.github/workflows/k8s-deploy.yml` при каждом пуше в `mai
 2. Поднимает локальный кластер kind.
 3. Загружает образ в кластер.
 4. Развертывает приложение через Helm.
+
+## Jenkins (Case 4 & 5)
+
+Проект включает готовые Jenkinsfile для запуска в Jenkins:
+
+- **Jenkinsfile**: сборка Docker-образа и отправка в Docker Hub при каждом коммите.
+- **Jenkinsfile-multistage**: многоэтапный пайплайн — lint → test → build → deploy.
+
+### Требования для Jenkins
+
+- Установленный Jenkins с плагинами: Docker Pipeline, Pipeline.
+- Учётные данные Docker Hub в Jenkins (ID: `dockerhub-credentials`).
 
 ## Лицензия
 
